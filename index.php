@@ -1,10 +1,10 @@
 <?php
 #session variable accessible by any page on website (super global)
-session_start();
+//session_start();
     include("connection.php");
     include("functions.php");
 
-    $user_data = check_login($con);     #con - connection to database
+    #$user_data = check_login($con);     #con - connection to database
 ?>
 
 <!DOCTYPE html>
@@ -13,10 +13,10 @@ session_start();
 	<title>Featherweights</title>
 </head>
 <body>
-	<a href="logout.php">Logout</a>
+	<a href="login.php">Login</a>
 	<h1>Index</h1>
 
 	<br>
-	Hello, <?php echo $user_data['user_name']; ?>
+	Welcome to Featherweights
 </body>
 </html>
