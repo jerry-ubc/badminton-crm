@@ -109,6 +109,13 @@ function check_login($redirect = true) {
     }
 }
 
+function check_verified() {
+    if($_SESSION['USER']->email == $_SESSION['USER']->email_verified) {
+        return true;
+    }
+        return false;
+}
+
 function random_num($length) {
 	$text = "";
     $minimum_cap = 5;   

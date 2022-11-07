@@ -1,6 +1,6 @@
 <?php
 	include "functions.php";
-	check_login();
+	check_login()
 ?>
 
 <!DOCTYPE html>
@@ -11,10 +11,15 @@
 <body>
 	<a href="logout.php">Logout</a>
 	<h1>Home</h1>
-	<?php 
-	if(check_login(false)) {
-		echo "Welcome home " . $_SESSION['USER']->username;
-	}
-	?>
+	<br>
+	Welcome home <?= $_SESSION['USER']->username?>
+	<?php if(!check_verified()):?>
+		<br><br>
+		<a href = "verify.php">
+			<button>Verify profile</button>
+		</a>
+	<?php endif;?>
+	<br>
+	<br>
 </body>
 </html>
