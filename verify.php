@@ -1,5 +1,6 @@
 <?php
-	include "functions.php";
+	require "mail.php";
+    require "functions.php";
 	check_login();
 
     $errors = array();
@@ -12,20 +13,29 @@
 
         $query = "insert into account_codes (code, expires, email) values (:code, :expires, :email)";
         execute_query($query, $vars);
+
+        $message = "Your code is " . $vars['code'];
+        $subject = "Featherweights verification code";
+        $recipient = $vars['email'];
+        send_mail($recipient, $subject, $message);
     }
 
     if($_SERVER['REQUEST_METHOD'] == "POST") {
         if(!check_verified()) {
+            #prepared statements
             $query = "select * from account_codes where code = :code && email = :email";
             $vars = array();
             $vars['email'] = $_SESSION['USER']->email;
             $vars['code'] = $_POST['code'];
             $row = execute_query($query, $vars);
             if(is_array($row)) {
+                #correct code
                 $row = $row[0];
                 $time = time();
                 if($row->expires > $time) {
-                    $id = $row->id;
+                    #didn't expire
+                    #$id = $row->id;    this gets the code id, not the user id
+                    $id = $_SESSION['USER']->id;
                     $query = "update users set email_verified = email where id = '$id' limit 1";
                     execute_query($query);
 
@@ -54,6 +64,8 @@
 </head>
 <body>
 	<a href="logout.php">Logout</a>
+    <br>
+    <a href="home.php">Home</a>
 	<h1>Verify</h1>
 
     <div>

@@ -32,6 +32,7 @@ function signup($data) {
         $errors[] = "Password sequence invalid";
     }
 
+    #save to database
     if(count($errors) == 0) {
         $arr['username'] = $data['username'];
         $arr['email'] =    $data['email'];
@@ -39,6 +40,7 @@ function signup($data) {
         $arr['date'] = date("Y-m-d H:i:s");
         $query = "insert into users (username, email, password, date) 
         value(:username, :email, :password, :date)";
+        #prepared statement
         execute_query($query, $arr);
     }
 
@@ -56,6 +58,7 @@ function login($data) {
     if(count($errors) == 0) {
         $arr['email'] =    $data['email'];
         $password = hash('sha256', $data['password']);
+        #prepared statements
         $query = "select * from users where email = :email limit 1";
         $row = execute_query($query, $arr);
         if(is_array($row)) {
@@ -110,8 +113,16 @@ function check_login($redirect = true) {
 }
 
 function check_verified() {
-    if($_SESSION['USER']->email == $_SESSION['USER']->email_verified) {
-        return true;
+    $id = $_SESSION['USER']->id;
+    $query = "select * from users where id = '$id' limit 1";
+    $row = execute_query($query);
+
+    if(is_array($row)) {
+        $row = $row[0];
+        #returns first item from $row, which is always an array
+        if($row->email == $row->email_verified) {
+            return true;
+        }
     }
         return false;
 }
