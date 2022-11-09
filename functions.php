@@ -10,7 +10,6 @@ function signup($data) {
         $errors[] = "Please enter a valid EMAIL";
     }
 
-    //DOUBLE CHECK THIS SYNTAX!!!!!!!!!!!!!!!
     $query = "select * from users where email = :email limit 1";
     $email = array();
     $email['email'] = $data['email'];
@@ -18,7 +17,6 @@ function signup($data) {
     if($result) {
         $errors[] = "That email is already in use";
     }
-
     if(strlen(trim($data['password'])) < 5) {
         $errors[] = "Password must be at least 5 characters long";
     }
@@ -34,16 +32,16 @@ function signup($data) {
 
     #save to database
     if(count($errors) == 0) {
-        $arr['username'] = $data['username'];
-        $arr['email'] =    $data['email'];
-        $arr['password'] = hash('sha256', $data['password']);
-        $arr['date'] = date("Y-m-d H:i:s");
-        $query = "insert into users (username, email, password, date) 
-        value(:username, :email, :password, :date)";
+        $arr['username'] =  $data['username'];
+        $arr['email'] =     $data['email'];
+        $arr['password'] =  hash('sha256', $data['password']);
+        $arr['date'] =      date("Y-m-d H:i:s");
+        $arr['user_id'] =   random_num(10);        #maxlength = 10
+        $query = "insert into users (user_id, username, email, password, date) 
+        value(:user_id, :username, :email, :password, :date)";
         #prepared statement
         execute_query($query, $arr);
     }
-
     return $errors;
 }
 
@@ -54,12 +52,11 @@ function login($data) {
         $errors[] = "Please enter a valid EMAIL";
     }
 
-    #check
+    #check account against database
     if(count($errors) == 0) {
-        $arr['email'] =    $data['email'];
+        $arr['email'] = $data['email'];
         $password = hash('sha256', $data['password']);
-        #prepared statements
-        $query = "select * from users where email = :email limit 1";
+        $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
         $row = execute_query($query, $arr);
         if(is_array($row)) {
             $row = $row[0];
@@ -80,6 +77,7 @@ function login($data) {
 }
 
 function execute_query($query, $variables = array()) {
+    #connects to database everytime function is called
     $server = "mysql:host=localhost;dbname=accounts_db;port=3307";
     $con = new PDO($server, 'root', 'lsyxgjrHZHGe556!');
 
@@ -118,13 +116,12 @@ function check_verified() {
     $row = execute_query($query);
 
     if(is_array($row)) {
-        $row = $row[0];
-        #returns first item from $row, which is always an array
+        $row = $row[0];     #returns first item from $row, which is always an array
         if($row->email == $row->email_verified) {
             return true;
         }
     }
-        return false;
+    return false;
 }
 
 function random_num($length) {

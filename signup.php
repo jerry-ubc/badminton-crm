@@ -36,6 +36,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 			<input type = "text" name = "email"     placeholder = "Email"><br>
             <input type = "text" name = "password"  placeholder = "Password"><br>
             <input type = "text" name = "password2" placeholder = "Re-enter Password"><br>
+            <div>Password should be (1) 5-50 characters, (2) at least 1 digit, (3) at least 1 letter</div>
+            <div>Special characters allowed: !@#$%</div><br><br>
 
 			<input type = "submit" value = "Signup"><br><br>
 			<a href = "login.php">Already have an account?</a><br><br>

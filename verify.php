@@ -14,7 +14,7 @@
         $query = "insert into account_codes (code, expires, email) values (:code, :expires, :email)";
         execute_query($query, $vars);
 
-        $message = "Your code is " . $vars['code'];
+        $message = "Your Featherweights code is " . $vars['code'];
         $subject = "Featherweights verification code";
         $recipient = $vars['email'];
         send_mail($recipient, $subject, $message);
